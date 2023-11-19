@@ -1,5 +1,6 @@
 <h1 align="center">
-  Debian 9 (Stretch) PHP 5.2.17 with support "mysqlnd"
+  Debian 12 (Bookworm) PHP 5.2.17 with support "mysqlnd"
+  Modified to support Debian 12 from https://github.com/SIP-Online/debian9-php5.2-mysqlnd
 </h1>
 
 ## Installing required libraries
@@ -7,7 +8,7 @@ sudo apt-get install autoconf make binutils gcc dpkg-dev libtool libxml2-dev lib
 
 
 ## Building and Install
-git clone "https://github.com/SIP-Online/debian9-php5.2-mysqlnd.git"<br />
-cd "debian9-php5.2-mysqlnd"<br />
-chmod 0755 "configure.php5.2-Debian9.sh"<br />
-./configure.php5.2-Debian9.sh
+git clone "https://github.com/jacktronics/debian12-php5.2-mysqlnd.git"<br />
+cd "debian12-php5.2-mysqln"<br />
+chmod 0755 "configure.php5.2-Debian12.sh"<br />
+./configure.php5.2-Debian12.sh
