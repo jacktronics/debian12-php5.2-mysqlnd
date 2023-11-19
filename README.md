@@ -10,6 +10,6 @@ sudo apt-get install autoconf make binutils gcc dpkg-dev libtool libxml2-dev lib
 
 ## Building and Install
 git clone "https://github.com/jacktronics/debian12-php5.2-mysqlnd.git"<br />
-cd "debian12-php5.2-mysqln"<br />
+cd "debian12-php5.2-mysqlnd"<br />
 chmod 0755 "configure.php5.2-Debian12.sh"<br />
 ./configure.php5.2-Debian12.sh
