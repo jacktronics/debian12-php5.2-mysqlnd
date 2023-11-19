@@ -228,5 +228,5 @@ patch -p 1 -i "../../php-5.2.17-fpm-0.5.14.patch"
 	--enable-exif \
 	--enable-soap
 
-make
+CFLAGS='-Wl,--allow-multiple-definition' LDFLAGS='-Wl,--allow-multiple-definition' make
 make install
