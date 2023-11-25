@@ -5,11 +5,12 @@
 #
 ##############
 
-LP_X86_64="x86_64-linux-gnu"
+ARCH=$(uname -m)
+LP_ARCH=$(dpkg-architecture -q DEB_HOST_GNU_TYPE)
 MYSQL_SOCK_PATH="/run/mysqld/mysqld.sock"
 
 BASEDIR=$(pwd)
-X86_64_PATH="lib/x86_64-linux-gnu"
+ARCH_PATH="lib/${LP_ARCH}"
 PROJECT_PATH="${BASEDIR}/php-libssl-1.0"
 PHP_PATH="php-5.2.17"
 OPENSSL_PATH="/usr/local/openssl-1.0"
@@ -23,30 +24,30 @@ IMAP_2007_VERSION="2007f"
 IMAP_2007_REVISION="7"
 
 cd "/usr/lib"
-if [ ! -L "libjpeg.so" ] && [ -f "${LP_X86_64}/libjpeg.so" ]; then
-	echo "Add the symbolic link \"${LP_X86_64}/libjpeg.so\" => \"libjpeg.so\""
-	ln -s "${LP_X86_64}/libjpeg.so" "libjpeg.so"
+if [ ! -L "libjpeg.so" ] && [ -f "${LP_ARCH}/libjpeg.so" ]; then
+	echo "Add the symbolic link \"${LP_ARCH}/libjpeg.so\" => \"libjpeg.so\""
+	ln -s "${LP_ARCH}/libjpeg.so" "libjpeg.so"
 
 	sleep 1
 fi
 
-if [ ! -L "libpng.so" ] && [ -f "${LP_X86_64}/libpng.so" ]; then
-	echo "Add the symbolic link \"${LP_X86_64}/libpng.so\" => \"libpng.so\""
-	ln -s "${LP_X86_64}/libpng.so" "libpng.so"
+if [ ! -L "libpng.so" ] && [ -f "${LP_ARCH}/libpng.so" ]; then
+	echo "Add the symbolic link \"${LP_ARCH}/libpng.so\" => \"libpng.so\""
+	ln -s "${LP_ARCH}/libpng.so" "libpng.so"
 
 	sleep 1
 fi
 
-if [ ! -L "libXpm.so" ] && [ -f "${LP_X86_64}/libXpm.so" ]; then
-	echo "Add the symbolic link \"${LP_X86_64}/libXpm.so\" => \"libXpm.so\""
-	ln -s "${LP_X86_64}/libXpm.so" "libXpm.so"
+if [ ! -L "libXpm.so" ] && [ -f "${LP_ARCH}/libXpm.so" ]; then
+	echo "Add the symbolic link \"${LP_ARCH}/libXpm.so\" => \"libXpm.so\""
+	ln -s "${LP_ARCH}/libXpm.so" "libXpm.so"
 
 	sleep 1
 fi
 
-if [ ! -L "libkrb5.so" ] && [ -f "${LP_X86_64}/libkrb5.so" ]; then
-	echo "Add the symbolic link \"${LP_X86_64}/libkrb5.so\" => \"libkrb5.so\""
-	ln -s "${LP_X86_64}/libkrb5.so" "libkrb5.so"
+if [ ! -L "libkrb5.so" ] && [ -f "${LP_ARCH}/libkrb5.so" ]; then
+	echo "Add the symbolic link \"${LP_ARCH}/libkrb5.so\" => \"libkrb5.so\""
+	ln -s "${LP_ARCH}/libkrb5.so" "libkrb5.so"
 
 	sleep 1
 fi
@@ -98,7 +99,7 @@ if [ ! -d "${OPENSSL_PATH}" ]; then
 	make
 	make install
 
-	ln -s "${OPENSSL_PATH}/lib" "${OPENSSL_PATH}/${X86_64_PATH}"
+	ln -s "${OPENSSL_PATH}/lib" "${OPENSSL_PATH}/${ARCH_PATH}"
 fi
 
 if [ ! -d "${CURL_PATH}" ]; then
@@ -127,7 +128,7 @@ if [ ! -d "${CURL_PATH}" ]; then
 	make
 	make install
 
-	ln -s "${CURL_PATH}/lib" "${CURL_PATH}/${X86_64_PATH}"
+	ln -s "${CURL_PATH}/lib" "${CURL_PATH}/${ARCH_PATH}"
 fi
 
 if [ ! -d "${IMAP_2007_PATH}" ]; then
@@ -165,7 +166,7 @@ if [ ! -d "${IMAP_2007_PATH}" ]; then
 		cp c-client/*.h "${IMAP_2007_PATH}/include"
 		cp c-client/c-client.a "${IMAP_2007_PATH}/lib/libc-client.a"
 
-		ln -s "${IMAP_2007_PATH}/lib" "${IMAP_2007_PATH}/${X86_64_PATH}"
+		ln -s "${IMAP_2007_PATH}/lib" "${IMAP_2007_PATH}/${ARCH_PATH}"
 	fi
 fi
 
@@ -182,12 +183,17 @@ fi
 tar -xjf "${PHP_PATH}.tar.bz2"
 cd "${PHP_PATH}"
 
+cp -f "../../config.guess" ext/pdo_sqlite/sqlite/config.guess
+cp -f "../../config.sub" ext/pdo_sqlite/sqlite/config.sub
+cp -f "../../config.guess" config.guess
+cp -f "../../config.sub" config.sub
+
 patch -p 1 -i "../../php-5.2.17-mysqlnd.patch"
 patch -p 1 -i "../../${PHP_PATH}-mail-header.patch"
 patch -p 1 -i "../../suhosin-patch-5.2.16-0.9.7.patch"
 patch -p 1 -i "../../debian_patches_disable_SSLv2_for_openssl_1_0_0.patch"
 patch -p 1 -i "../../php-libxml.patch"
-patch -p 1 -i "../../php-5.2.17-fpm-0.5.14.patch"
+patch -p 1 -i "../../php-5.2.17-fpm-${ARCH}-0.5.14.patch"
 
 ./configure \
 	--prefix=${PHP_PREFIX} \
